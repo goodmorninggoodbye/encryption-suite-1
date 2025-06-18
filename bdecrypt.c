@@ -106,13 +106,10 @@ void processFile(char *password, char *ciphertext, char *plaintext){
 
     unsigned char iv[BLOCK_SIZE] = {0}; //generate a 16-byte IV from the PRNG
 
-    //////////////////////////////////////////////////////////
-    //// THE MAIN DIFFERENCE BETWEEN DECRYPT AND ENCRYPT. ////
-    //////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////
-    //// READS INITIALIZATION VECTOR AND ADDS TO ARRAY. ////
-    ////////////////////////////////////////////////////////
+       ///////////////////////////////////////////////////////////
+      //// THE MAIN DIFFERENCE BETWEEN DECRYPT AND ENCRYPT /////
+     ////  READS INITIALIZATION VECTOR AND ADDS TO ARRAY. /////
+    /////////////////////////////////////////////////////////
 
     fread(iv, sizeof(unsigned char), BLOCK_SIZE, readFile);
     // printf("IV = [\n");
@@ -126,15 +123,13 @@ void processFile(char *password, char *ciphertext, char *plaintext){
 
 
 
-    // completely correct the first line written, for some reason.
-
     // for first block 
-    // The initialization vector will be the first 16 bytes written to the file
+    // The initialization vector's the first 16 bytes written to the file
 
     // XOR with first plaintext block; then encrypt the block
-    // each block of plaintext is XORed with the previous block of ciphertext
+    // Each block of plaintext is XORed with the previous block of ciphertext
 
-    unsigned char keystream[BLOCK_SIZE]; //generate a 16-byte IV from the PRNG
+    unsigned char keystream[BLOCK_SIZE]; // Generate a 16-byte IV from the PRNG
     int lastBlock = 0;
     int firstRound = 0;
     unsigned char tempBlock[BLOCK_SIZE];
@@ -143,7 +138,7 @@ void processFile(char *password, char *ciphertext, char *plaintext){
     while (1) {
         bytes_read = fread(block, sizeof(unsigned char), BLOCK_SIZE, readFile);
         if (feof(readFile)) {
-            lastBlock = 1; //this is the last block
+            lastBlock = 1; // This is the last block
             // printf("\nthis is the last block\n");
             break;
         }
