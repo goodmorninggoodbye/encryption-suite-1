@@ -105,12 +105,9 @@ void processFile(char *password, char *plaintext, char *ciphertext){
 
     unsigned char iv[BLOCK_SIZE] = {0}; //generate a 16-byte IV from the PRNG
 
-    //////////////////////////////////////////////////////////
-    //// THE MAIN DIFFERENCE BETWEEN DECRYPT AND ENCRYPT. ////
-    //////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////////
-    //// CREATES INITIALIZATION VECTOR AND WRITES TO FILE. ////
+       ///////////////////////////////////////////////////////////
+      //// THE MAIN DIFFERENCE BETWEEN DECRYPT AND ENCRYPT.  ////
+     //// CREATES INITIALIZATION VECTOR AND WRITES TO FILE. ////
     ///////////////////////////////////////////////////////////
 
     for (int i = 0; i < BLOCK_SIZE; i++) {
@@ -127,37 +124,22 @@ void processFile(char *password, char *plaintext, char *ciphertext){
 
 
 
-    // completely correct the first line written, for some reason.
-
-    // for first block 
+    // For first block 
     // The initialization vector will be the first 16 bytes written to the file
 
     // XOR with first plaintext block; then encrypt the block
-    // each block of plaintext is XORed with the previous block of ciphertext
+    // Each block of plaintext is XORed with the previous block of ciphertext
 
     unsigned char keystream[BLOCK_SIZE]; //generate a 16-byte IV from the PRNG
     int lastBlock = 0;
     while ((bytes_read = fread(block, sizeof(unsigned char), BLOCK_SIZE, readFile)) > 0) {
 
-        /*
-            1.
-            If it is the last block, add padding. This will be an amount from 1 through 16 bytes
-            (e.g., finish up a block or add a new block). The padding is added before any
-            encryption or shuffling takes place.
 
-        */
         if (bytes_read < BLOCK_SIZE) {
             lastBlock = 1; //this is the last block
             pad_block(block, bytes_read);
         }
 
-
-        /*
-            2.
-            Apply CBC: temp_blockN = plaintext_blockN ⨁ ciphertext_blockN-1
-            Use the initialization vector if this is the first block.
-
-        */
 
         for (int i = 0; i < BLOCK_SIZE; i++) {
             keystream[i] = (unsigned char)pseudoRandomNumber(prng);
@@ -197,7 +179,7 @@ void processFile(char *password, char *plaintext, char *ciphertext){
     }
 
     // If there's no padding needed to be done, still need to add it.
-    // creation of a last block
+    // Creation of a last block
 
     if (lastBlock == 0){
         lastBlock = 1; //this is the last block
